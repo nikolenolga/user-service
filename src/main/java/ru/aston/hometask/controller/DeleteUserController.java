@@ -3,7 +3,7 @@ package ru.aston.hometask.controller;
 import lombok.AllArgsConstructor;
 import ru.aston.hometask.context.AppData;
 import ru.aston.hometask.context.AppRequest;
-import ru.aston.hometask.entity.User;
+import ru.aston.hometask.dto.UserTo;
 import ru.aston.hometask.service.UserService;
 import ru.aston.hometask.utils.Key;
 import ru.aston.hometask.utils.Message;
@@ -17,7 +17,7 @@ public class DeleteUserController implements Controller {
     @Override
     public void execute(AppRequest request, AppData appData) {
         Long savedId = null;
-        User user = appData.getAttribute(Key.USER, User.class);
+        UserTo user = appData.getAttribute(Key.USER, UserTo.class);
         if (user != null) {
             savedId = user.getId();
         }

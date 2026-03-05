@@ -20,12 +20,11 @@ public class Message {
     public static final String ENTER_AT_LIST_ONE_FIELD_FOR_UPDATE_EXAMPLE = "Enter at list one field for update: name=value email=value age=value";
     public static final String ENTER_ALL_FIELD_VALUES_TO_CREATE_USER_EXAMPLE = "Enter all field values to create user: name=value email=value age=value";
 
-    public static final String CURRENT_COMMAND_X_CURRENT_USER_X_N = "-->> Current command: %s, current user: %s%n";
+    public static final String N_CURRENT_COMMAND_X_CURRENT_USER_X_N = "%n-->> Current command: %s, current user: %s%n";
     public static final String NONE = "none";
     public static final String GREETINGS = """
             === User Service ===
             Available commands:
             %s
-            Enter the command:
-            """.formatted(Command.HELP_INFO);
+            Enter the command:""".formatted(Command.HELP_INFO);
 }

@@ -3,7 +3,7 @@ package ru.aston.hometask.controller;
 import lombok.AllArgsConstructor;
 import ru.aston.hometask.context.AppData;
 import ru.aston.hometask.context.AppRequest;
-import ru.aston.hometask.entity.User;
+import ru.aston.hometask.dto.UserTo;
 import ru.aston.hometask.service.UserService;
 import ru.aston.hometask.utils.Key;
 import ru.aston.hometask.utils.Message;
@@ -25,7 +25,7 @@ public class ReadUserController implements Controller {
             return;
         }
 
-        User user = userService.read(id);
+        UserTo user = userService.read(id);
         appData.setAttribute(Key.USER, user);
     }
 }

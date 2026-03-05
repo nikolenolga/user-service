@@ -1,18 +1,12 @@
 package ru.aston.hometask.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 @Builder
-@Getter
-@Setter
 public class UserTo {
     public static final Integer MIN_AGE = 0;
     public static final Integer MAX_AGE = 150;

@@ -5,16 +5,19 @@ import lombok.Getter;
 import ru.aston.hometask.context.AppData;
 import ru.aston.hometask.context.AppRequest;
 import ru.aston.hometask.exception.AppException;
+import ru.aston.hometask.utils.Command;
 import ru.aston.hometask.utils.Key;
 import ru.aston.hometask.utils.Message;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 @AllArgsConstructor
 public class DispatcherController {
     private final Map<String, Controller> controllers = new HashMap<>();
+    private final Set<String> savableCommands = Set.of(Command.CREATE, Command.READ, Command.UPDATE, Command.DELETE);
     @Getter
     private AppData appData;
 
@@ -38,10 +41,9 @@ public class DispatcherController {
             throw new AppException(Message.X_IS_NOT_AN_APP_COMMAND_SEE_HELP.formatted(command));
         }
 
-        if (!command.equals(lastCommandName)) {
+        if(savableCommands.contains(command)) {
             appData.setAttribute(Key.COMMAND, command);
         }
-
         controllers.get(command).execute(request, appData);
     }
 

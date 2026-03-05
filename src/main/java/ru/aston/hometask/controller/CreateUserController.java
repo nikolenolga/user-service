@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import ru.aston.hometask.context.AppData;
 import ru.aston.hometask.context.AppRequest;
-import ru.aston.hometask.entity.User;
+import ru.aston.hometask.dto.UserTo;
 import ru.aston.hometask.service.UserService;
 import ru.aston.hometask.utils.Key;
 import ru.aston.hometask.utils.Message;
@@ -24,7 +24,7 @@ public class CreateUserController implements Controller {
             return;
         }
 
-        User user = userService.create(name, email, age);
+        UserTo user = userService.create(name, email, age);
         appData.setAttribute(Key.USER, user);
     }
 }

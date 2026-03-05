@@ -4,7 +4,6 @@ import ru.aston.hometask.context.AppData;
 import ru.aston.hometask.context.AppRequest;
 import ru.aston.hometask.context.Configuration;
 import ru.aston.hometask.controller.DispatcherController;
-import ru.aston.hometask.entity.User;
 import ru.aston.hometask.exception.AppException;
 import ru.aston.hometask.utils.Command;
 import ru.aston.hometask.utils.Key;
@@ -48,8 +47,8 @@ public class ApplicationRunner {
 
     private static void printPickedCommandAndUser(AppData appData) {
         String savedCommand = appData.getAttribute(Key.COMMAND, String.class);
-        User savedUser = appData.getAttribute(Key.USER, User.class);
-        System.out.printf(Message.CURRENT_COMMAND_X_CURRENT_USER_X_N,
+        Object savedUser = appData.getAttribute(Key.USER);
+        System.out.printf(Message.N_CURRENT_COMMAND_X_CURRENT_USER_X_N,
                 savedCommand == null ? Message.NONE : savedCommand,
                 savedUser == null ? Message.NONE : savedUser);
     }

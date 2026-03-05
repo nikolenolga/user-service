@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import ru.aston.hometask.context.AppData;
 import ru.aston.hometask.context.AppRequest;
-import ru.aston.hometask.entity.User;
+import ru.aston.hometask.dto.UserTo;
 import ru.aston.hometask.service.UserService;
 import ru.aston.hometask.utils.Key;
 import ru.aston.hometask.utils.Message;
@@ -17,16 +17,17 @@ public class UpdateUserController implements Controller {
 
     @Override
     public void execute(AppRequest request, AppData appData) {
-        User user = appData.getAttribute(Key.USER, User.class);
-        Long userId = request.getLongParameter(Key.ID);
-        if (userId == null && user == null) {
+        UserTo user = appData.getAttribute(Key.USER, UserTo.class);
+        Long id = request.getLongParameter(Key.ID);
+
+        if (Objects.nonNull(id)) {
+            appData.removeAttribute(Key.USER);
+        } else if (Objects.isNull(user)) {
             System.out.println(Message.ENTER_USER_ID_EXAMPLE);
             return;
+        } else {
+            id = user.getId();
         }
-
-        Long id = Objects.isNull(userId)
-                ? user.getId()
-                : userId;
 
         String name = request.getParameter(Key.NAME);
         String email = request.getParameter(Key.EMAIL);
@@ -37,7 +38,7 @@ public class UpdateUserController implements Controller {
             return;
         }
 
-        User updated = userService.update(id, name, email, age);
+        UserTo updated = userService.update(id, name, email, age);
         appData.setAttribute(Key.USER, updated);
     }
 }
