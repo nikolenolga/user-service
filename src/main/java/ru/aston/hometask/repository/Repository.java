@@ -10,7 +10,7 @@ public interface Repository<T> {
 
     Optional<T> update(T t);
 
-    void delete(T t);
+    boolean delete(T t);
 
     boolean delete(long id);
 

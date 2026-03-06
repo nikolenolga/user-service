@@ -2,7 +2,7 @@ package ru.aston.hometask;
 
 import ru.aston.hometask.context.AppData;
 import ru.aston.hometask.context.AppRequest;
-import ru.aston.hometask.context.Configuration;
+import ru.aston.hometask.config.Configuration;
 import ru.aston.hometask.controller.DispatcherController;
 import ru.aston.hometask.exception.AppException;
 import ru.aston.hometask.utils.Command;

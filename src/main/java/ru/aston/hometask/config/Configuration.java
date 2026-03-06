@@ -1,9 +1,10 @@
-package ru.aston.hometask.context;
+package ru.aston.hometask.config;
 
 import com.github.javafaker.Faker;
 import com.github.javafaker.Internet;
 import com.github.javafaker.Name;
 import com.github.javafaker.Number;
+import ru.aston.hometask.context.AppData;
 import ru.aston.hometask.controller.CreateUserController;
 import ru.aston.hometask.controller.DeleteUserController;
 import ru.aston.hometask.controller.DispatcherController;
@@ -19,7 +20,9 @@ public class Configuration {
 
     public static DispatcherController createAndConfigureDispatcherController() {
         System.out.println("Configuring application...");
-        UserRepository userRepository = new UserRepository();
+        ApplicationProperties applicationProperties = new ApplicationProperties();
+        SessionCreator sessionCreator = new SessionCreator(applicationProperties);
+        UserRepository userRepository = new UserRepository(sessionCreator);
         UserService userService = new UserService(userRepository);
 
         AppData appData = new AppData();
@@ -30,11 +33,11 @@ public class Configuration {
         dispatcher.registerController(Command.DELETE, new DeleteUserController(userService));
         dispatcher.registerController(Command.PRINT, new PrintUserController(userService));
 
-        addStartData(userService, 100);
+        addRandomStartData(userService, 100);
         return dispatcher;
     }
 
-    public static void addStartData(UserService userService, int amount) {
+    public static void addRandomStartData(UserService userService, int amount) {
         System.out.println("Adding start data...");
         Faker faker = new Faker();
         Name name = faker.name();
