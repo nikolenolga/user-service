@@ -18,7 +18,6 @@ import ru.aston.hometask.service.UserService;
 import ru.aston.hometask.utils.Command;
 import ru.aston.hometask.utils.Validator;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -60,7 +59,6 @@ public class Configuration implements AutoCloseable {
                                 .name(name.firstName())
                                 .email(internet.emailAddress())
                                 .age(number.numberBetween(Validator.MIN_AGE, Validator.MAX_AGE))
-                                .createdAt(LocalDateTime.now())
                                 .build()))
                 .limit(amount)
                 .count();
