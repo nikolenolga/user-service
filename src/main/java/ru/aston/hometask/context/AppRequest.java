@@ -16,7 +16,6 @@ public class AppRequest {
     private static final String REQUEST_PARTS_SPLITERATOR = " ";
     private static final String PARAMETERS_SPLITERATOR = "=";
     private static final String EXIT_COMMAND = Command.EXIT;
-    private static final String HELP_COMMAND = Command.HELP;
     private final Map<String, String> parameters = new HashMap<>();
     @Getter
     private String commandName;
