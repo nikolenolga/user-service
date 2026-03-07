@@ -11,6 +11,7 @@ public class Dto {
                 .id(userTo.getId())
                 .name(userTo.getName())
                 .email(userTo.getEmail())
+                .age(userTo.getAge())
                 .createdAt(userTo.getCreatedAt())
                 .build();
     }
@@ -20,6 +21,7 @@ public class Dto {
                 .id(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())
+                .age(user.getAge())
                 .createdAt(user.getCreatedAt())
                 .build();
     }

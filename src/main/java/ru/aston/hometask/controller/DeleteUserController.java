@@ -1,9 +1,7 @@
 package ru.aston.hometask.controller;
 
 import lombok.AllArgsConstructor;
-import ru.aston.hometask.context.AppData;
 import ru.aston.hometask.context.AppRequest;
-import ru.aston.hometask.dto.UserTo;
 import ru.aston.hometask.service.UserService;
 import ru.aston.hometask.utils.Key;
 import ru.aston.hometask.utils.Message;
@@ -15,25 +13,15 @@ public class DeleteUserController implements Controller {
     UserService userService;
 
     @Override
-    public void execute(AppRequest request, AppData appData) {
-        Long savedId = null;
-        UserTo user = appData.getAttribute(Key.USER, UserTo.class);
-        if (user != null) {
-            savedId = user.getId();
-        }
-
-        Long id = request.containsParameter(Key.ID)
-                ? request.getLongParameter(Key.ID)
-                : savedId;
+    public void execute(AppRequest request) {
+        Long id = request.getLongParameter(Key.ID);
 
         if (Objects.isNull(id)) {
-            System.out.println(Message.ENTER_USER_ID_EXAMPLE);
+            System.out.println(Message.COMMAND_REQUIRES_USER_ID_PARAMETER);
             return;
         }
 
         userService.delete(id);
-        if (savedId != null && savedId.equals(id)) {
-            appData.removeAttribute(Key.USER);
-        }
+        System.out.printf(Message.USER_WITH_ID_S_DELETED_N, id);
     }
 }

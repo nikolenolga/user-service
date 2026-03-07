@@ -1,7 +1,6 @@
 package ru.aston.hometask.controller;
 
 import lombok.AllArgsConstructor;
-import ru.aston.hometask.context.AppData;
 import ru.aston.hometask.context.AppRequest;
 import ru.aston.hometask.dto.UserTo;
 import ru.aston.hometask.service.UserService;
@@ -15,17 +14,15 @@ public class ReadUserController implements Controller {
     private final UserService userService;
 
     @Override
-    public void execute(AppRequest request, AppData appData) {
-        Long id = request.containsParameter(Key.ID)
-                ? request.getLongParameter(Key.ID)
-                : null;
+    public void execute(AppRequest request) {
+        Long id = request.getLongParameter(Key.ID);
 
         if (Objects.isNull(id)) {
-            System.out.println(Message.ENTER_USER_ID_EXAMPLE);
+            System.out.println(Message.COMMAND_REQUIRES_USER_ID_PARAMETER);
             return;
         }
 
         UserTo user = userService.read(id);
-        appData.setAttribute(Key.USER, user);
+        System.out.printf(Message.USER_FOUND_S_N, user);
     }
 }

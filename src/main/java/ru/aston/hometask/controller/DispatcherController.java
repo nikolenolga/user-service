@@ -1,50 +1,36 @@
 package ru.aston.hometask.controller;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import ru.aston.hometask.context.AppData;
+import lombok.extern.slf4j.Slf4j;
 import ru.aston.hometask.context.AppRequest;
 import ru.aston.hometask.exception.AppException;
-import ru.aston.hometask.utils.Command;
-import ru.aston.hometask.utils.Key;
 import ru.aston.hometask.utils.Message;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
+@Slf4j
 @AllArgsConstructor
 public class DispatcherController {
     private final Map<String, Controller> controllers = new HashMap<>();
-    private final Set<String> savableCommands = Set.of(Command.CREATE, Command.READ, Command.UPDATE, Command.DELETE);
-    @Getter
-    private AppData appData;
 
     public void registerController(String command, Controller controller) {
         controllers.put(command, controller);
     }
 
     public void send(AppRequest request) throws AppException {
-        String requestCommandName = request.getCommandName();
-        String lastCommandName = appData.getAttribute(Key.COMMAND, String.class);
-
-        String command = Objects.isNull(requestCommandName)
-                ? lastCommandName
-                : requestCommandName;
+        String command = request.getCommandName();
 
         if (Objects.isNull(command)) {
             throw new AppException(Message.NO_COMMAND_FOUND_SEE_HELP);
         }
-
         if (!controllers.containsKey(command)) {
             throw new AppException(Message.X_IS_NOT_AN_APP_COMMAND_SEE_HELP.formatted(command));
         }
 
-        if(savableCommands.contains(command)) {
-            appData.setAttribute(Key.COMMAND, command);
-        }
-        controllers.get(command).execute(request, appData);
+        log.debug("Executing command {}", command);
+        controllers.get(command).execute(request);
     }
 
 }

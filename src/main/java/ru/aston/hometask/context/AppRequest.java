@@ -1,6 +1,7 @@
 package ru.aston.hometask.context;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import ru.aston.hometask.exception.AppException;
 import ru.aston.hometask.utils.Command;
@@ -10,6 +11,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 public class AppRequest {
     private static final String REQUEST_PARTS_SPLITERATOR = " ";
     private static final String PARAMETERS_SPLITERATOR = "=";
@@ -23,6 +25,7 @@ public class AppRequest {
     }
 
     public static AppRequest createRequest(String requestLine) {
+        log.info("Request: {}", requestLine);
         String[] s = requestLine.trim().split(" ");
         if (StringUtils.isBlank(requestLine)) {
             throw new AppException(Message.EMPTY_REQUEST);
@@ -112,9 +115,5 @@ public class AppRequest {
 
     public boolean isExitRequest() {
         return EXIT_COMMAND.equals(commandName);
-    }
-
-    public boolean isHelpRequest() {
-        return HELP_COMMAND.equals(commandName);
     }
 }

@@ -6,70 +6,66 @@ import ru.aston.hometask.entity.User;
 import ru.aston.hometask.exception.AppException;
 import ru.aston.hometask.mapper.Dto;
 import ru.aston.hometask.repository.Repository;
+import ru.aston.hometask.utils.Message;
 
 import java.util.Collection;
+import java.util.Objects;
 
 @AllArgsConstructor
 public class UserService {
     private final Repository<User> repository;
 
     public UserTo create(String name, String email, Integer age) {
-        User user = User.builder()
-                .name(name).email(email).age(age)
-                .build();
+        UserTo userTo = UserTo.builder().name(name).email(email).age(age).build();
 
-        UserTo created = repository.create(user)
+        return repository.create(Dto.MAPPER.from(userTo))
                 .map(Dto.MAPPER::from)
-                .orElseThrow(() -> new AppException("User not created"));
+                .orElseThrow(() -> new AppException(Message.USER_NOT_CREATED));
+    }
 
-        System.out.printf("User created: %s%n", created);
-        return created;
+    public UserTo create(UserTo userTo) {
+
+        return repository.create(Dto.MAPPER.from(userTo))
+                .map(Dto.MAPPER::from)
+                .orElseThrow(() -> new AppException(Message.USER_NOT_CREATED));
     }
 
     public UserTo read(Long id) {
-        UserTo user = repository.get(id)
+        return repository.get(id)
                 .map(Dto.MAPPER::from)
-                .orElseThrow(() -> new AppException("User with id=%d not found".formatted(id)));
-
-        System.out.printf("User found: %s%n", user);
-        return user;
+                .orElseThrow(() -> new AppException(Message.USER_WITH_ID_D_NOT_FOUND.formatted(id)));
     }
 
     public UserTo update(Long id, String name, String email, Integer age) {
-        User user = repository.get(id)
-                .orElseThrow(() -> new AppException("User with id=%d not found".formatted(id)));
+        UserTo read = read(id);
+        UserTo updating = UserTo.builder()
+                .id(id)
+                .name(Objects.isNull(name) ? read.getName() : name)
+                .email(Objects.isNull(email) ? read.getEmail() : email)
+                .age(Objects.isNull(age) ? read.getAge() : age)
+                .createdAt(read.getCreatedAt())
+                .build();
 
-        if (name != null) {
-            user.setName(name);
-        }
-        if (email != null) {
-            user.setEmail(email);
-        }
-        if (age != null) {
-            user.setAge(age);
-        }
+        return update(updating);
+    }
 
-        UserTo updated = repository.update(user)
+    public UserTo update(UserTo userTo) {
+
+        return repository.update(Dto.MAPPER.from(userTo))
                 .map(Dto.MAPPER::from)
-                .orElseThrow(() -> new AppException("Can't update user: %s".formatted(user)));
-
-        System.out.printf("User updated: %s%n", updated);
-        return updated;
+                .orElseThrow(() -> new AppException(Message.CAN_T_UPDATE_USER_S.formatted(userTo)));
     }
 
     public void delete(Long id) {
-        boolean deleted = repository.delete(id);
-
-        System.out.printf("User with id %s %s%n", id, deleted ? "deleted" : "not found");
+        if (!repository.delete(id)) {
+            throw new AppException(Message.USER_WITH_ID_D_NOT_FOUND.formatted(id));
+        }
     }
 
     public Collection<UserTo> getAll() {
-        Collection<UserTo> users = repository.getAll()
+        return repository.getAll()
                 .stream()
                 .map(Dto.MAPPER::from)
                 .toList();
-
-        System.out.printf("Found %d users%n", users.size());
-        return users;
     }
 }

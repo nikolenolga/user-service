@@ -4,49 +4,75 @@ import com.github.javafaker.Faker;
 import com.github.javafaker.Internet;
 import com.github.javafaker.Name;
 import com.github.javafaker.Number;
-import ru.aston.hometask.context.AppData;
+import lombok.extern.slf4j.Slf4j;
 import ru.aston.hometask.controller.CreateUserController;
 import ru.aston.hometask.controller.DeleteUserController;
 import ru.aston.hometask.controller.DispatcherController;
-import ru.aston.hometask.controller.PrintUserController;
+import ru.aston.hometask.controller.HelpController;
+import ru.aston.hometask.controller.PrintUsersController;
 import ru.aston.hometask.controller.ReadUserController;
 import ru.aston.hometask.controller.UpdateUserController;
-import ru.aston.hometask.dto.UserTo;
+import ru.aston.hometask.entity.User;
 import ru.aston.hometask.repository.UserRepository;
 import ru.aston.hometask.service.UserService;
 import ru.aston.hometask.utils.Command;
+import ru.aston.hometask.utils.Validator;
 
-public class Configuration {
+import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.stream.Stream;
 
-    public static DispatcherController createAndConfigureDispatcherController() {
-        System.out.println("Configuring application...");
+@Slf4j
+public class Configuration implements AutoCloseable {
+    private SessionCreator sessionCreator;
+    private UserRepository userRepository;
+    private Faker faker;
+
+    public DispatcherController configureApplication() {
+        log.info("Configuring application...");
         ApplicationProperties applicationProperties = new ApplicationProperties();
-        SessionCreator sessionCreator = new SessionCreator(applicationProperties);
-        UserRepository userRepository = new UserRepository(sessionCreator);
+        sessionCreator = new SessionCreator(applicationProperties);
+        userRepository = new UserRepository(sessionCreator);
         UserService userService = new UserService(userRepository);
 
-        AppData appData = new AppData();
-        DispatcherController dispatcher = new DispatcherController(appData);
+        DispatcherController dispatcher = new DispatcherController();
         dispatcher.registerController(Command.CREATE, new CreateUserController(userService));
         dispatcher.registerController(Command.READ, new ReadUserController(userService));
         dispatcher.registerController(Command.UPDATE, new UpdateUserController(userService));
         dispatcher.registerController(Command.DELETE, new DeleteUserController(userService));
-        dispatcher.registerController(Command.PRINT, new PrintUserController(userService));
+        dispatcher.registerController(Command.PRINT, new PrintUsersController(userService));
+        dispatcher.registerController(Command.HELP, new HelpController());
 
-        addRandomStartData(userService, 100);
+        faker = new Faker();
+        addRandomStartData(100);
         return dispatcher;
     }
 
-    public static void addRandomStartData(UserService userService, int amount) {
-        System.out.println("Adding start data...");
-        Faker faker = new Faker();
+    public void addRandomStartData(int amount) {
+        log.info("Adding start data...");
+
         Name name = faker.name();
         Internet internet = faker.internet();
         Number number = faker.number();
-        for (int i = 0; i < amount; i++) {
-            userService.create(name.firstName(),
-                    internet.emailAddress(),
-                    number.numberBetween(UserTo.MIN_AGE, UserTo.MAX_AGE));
+
+        long count = Stream.generate(() -> userRepository.create(
+                        User.builder()
+                                .name(name.firstName())
+                                .email(internet.emailAddress())
+                                .age(number.numberBetween(Validator.MIN_AGE, Validator.MAX_AGE))
+                                .createdAt(LocalDateTime.now())
+                                .build()))
+                .limit(amount)
+                .count();
+        log.info("{} users added", count);
+    }
+
+
+    @Override
+    public void close() {
+        log.info("Closing resources");
+        if (Objects.nonNull(sessionCreator)) {
+            sessionCreator.close();
         }
     }
 }

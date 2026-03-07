@@ -21,26 +21,15 @@ public class UserRepository implements Repository<User> {
             try {
                 session.persist(user);
                 transaction.commit();
-                System.out.println("from repo: " + user);
                 return Optional.of(user);
             } catch (Exception e) {
-                transaction.rollback();
+                if (transaction != null) {
+                    transaction.rollback();
+                }
                 return Optional.empty();
             }
         }
     }
-
-//    @Override
-//    public Optional<User> create(User user) {
-//        if (user != null) {
-//            Long id = nextId();
-//            user.setId(id);
-//            user.setCreatedAt(LocalDateTime.now());
-//            storage.put(id, user);
-//        }
-//
-//        return Optional.ofNullable(user);
-//    }
 
     @Override
     public Optional<User> get(long id) {
@@ -49,14 +38,6 @@ public class UserRepository implements Repository<User> {
             return Optional.ofNullable(user);
         }
     }
-
-//    @Override
-//    public Optional<User> get(long id) {
-//        if (storage.containsKey(id)) {
-//            return Optional.ofNullable(storage.get(id));
-//        }
-//        return Optional.empty();
-//    }
 
     @Override
     public Optional<User> update(User user) {
@@ -67,20 +48,13 @@ public class UserRepository implements Repository<User> {
                 transaction.commit();
                 return Optional.of(merged);
             } catch (Exception e) {
-                transaction.rollback();
+                if (transaction != null) {
+                    transaction.rollback();
+                }
                 return Optional.empty();
             }
         }
     }
-
-//    @Override
-//    public Optional<User> update(User user) {
-//        Long id = user.getId();
-//        if (!storage.containsKey(id)) {
-//            throw new AppException("User with id " + id + " does not exist");
-//        }
-//        return Optional.ofNullable(storage.put(id, user));
-//    }
 
     @Override
     public boolean delete(User user) {
@@ -91,21 +65,13 @@ public class UserRepository implements Repository<User> {
                 transaction.commit();
                 return true;
             } catch (Exception e) {
-                transaction.rollback();
+                if (transaction != null) {
+                    transaction.rollback();
+                }
                 return false;
             }
         }
     }
-
-//    @Override
-//    public void delete(User user) {
-//        Long id = user.getId();
-//        if (!storage.containsKey(id)) {
-//            throw new AppException("User with id " + id + " does not exist");
-//        }
-//
-//        storage.remove(id);
-//    }
 
     @Override
     public boolean delete(long id) {
@@ -117,21 +83,13 @@ public class UserRepository implements Repository<User> {
                 transaction.commit();
                 return true;
             } catch (Exception e) {
-                transaction.rollback();
+                if (transaction != null) {
+                    transaction.rollback();
+                }
                 return false;
             }
         }
     }
-
-//    @Override
-//    public boolean delete(long id) {
-//        if (!storage.containsKey(id)) {
-//            return false;
-//        }
-//
-//        storage.remove(id);
-//        return true;
-//    }
 
     @Override
     public Collection<User> getAll() {
@@ -140,10 +98,4 @@ public class UserRepository implements Repository<User> {
             return query.list();
         }
     }
-
-//    @Override
-//    public Collection<User> getAll() {
-//        return storage.values();
-//    }
-
 }
