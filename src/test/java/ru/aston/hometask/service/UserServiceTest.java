@@ -11,7 +11,7 @@ import ru.aston.hometask.dto.UserTo;
 import ru.aston.hometask.entity.User;
 import ru.aston.hometask.exception.AppException;
 import ru.aston.hometask.mapper.Dto;
-import ru.aston.hometask.repository.UserRepository;
+import ru.aston.hometask.repository.UserRepositoryImpl;
 import ru.aston.hometask.utils.Message;
 import ru.aston.hometask.utils.Validator;
 
@@ -39,9 +39,9 @@ class UserServiceTest {
     static User user;
     static UserTo userTo;
     @Mock
-    UserRepository userRepository;
+    UserRepositoryImpl userRepository;
     @InjectMocks
-    UserService userService;
+    UserServiceImpl userService;
 
     @BeforeAll
     public static void beforeAll() {

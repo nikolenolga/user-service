@@ -13,8 +13,8 @@ import ru.aston.hometask.controller.PrintUsersController;
 import ru.aston.hometask.controller.ReadUserController;
 import ru.aston.hometask.controller.UpdateUserController;
 import ru.aston.hometask.entity.User;
-import ru.aston.hometask.repository.UserRepository;
-import ru.aston.hometask.service.UserService;
+import ru.aston.hometask.repository.UserRepositoryImpl;
+import ru.aston.hometask.service.UserServiceImpl;
 import ru.aston.hometask.utils.Command;
 import ru.aston.hometask.utils.Validator;
 
@@ -24,15 +24,15 @@ import java.util.stream.Stream;
 @Slf4j
 public class Configuration implements AutoCloseable {
     private SessionCreator sessionCreator;
-    private UserRepository userRepository;
+    private UserRepositoryImpl userRepository;
     private Faker faker;
 
     public DispatcherController configureApplication() {
         log.info("Configuring application...");
         ApplicationProperties applicationProperties = new ApplicationProperties();
         sessionCreator = new SessionCreator(applicationProperties);
-        userRepository = new UserRepository(sessionCreator);
-        UserService userService = new UserService(userRepository);
+        userRepository = new UserRepositoryImpl(sessionCreator);
+        UserServiceImpl userService = new UserServiceImpl(userRepository);
 
         DispatcherController dispatcher = new DispatcherController();
         dispatcher.registerController(Command.CREATE, new CreateUserController(userService));
