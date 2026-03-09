@@ -10,7 +10,9 @@ public class Message {
     public static final String WRONG_PARAMETER_VALUE_KEY_X_VALUE_X = "Wrong parameter value: %s=%s";
     public static final String WRONG_PARAMETERS_AMOUNT = "Wrong parameters amount";
     public static final String APPLICATION_TERMINATED_WITH_ERROR_X_N = "The application terminated with an error: %s.";
+    public static final String CAN_NOT_PROCESS_THE_ROUTE_X_SEE_HELP = "Can not process the route: %s. See 'help'.";
     public static final String X_IS_NOT_AN_APP_COMMAND_SEE_HELP = "%s is not an app command. See 'help'.";
+    public static final String NO_ROUTE_FOUND_SEE_HELP = "No route found. See 'help'.";
     public static final String NO_COMMAND_FOUND_SEE_HELP = "No command found. See 'help'.";
     public static final String COMMAND_REQUIRES_USER_ID_PARAMETER = "Command requires user id parameter: id=<value>";
     public static final String COMMAND_REQUIRES_AT_LIST_ONE_FIELD_PARAMETER_FOR_UPDATE_EXAMPLE = "Command requires at list one parameter for update: name=<value> email=<value> age=<value>";

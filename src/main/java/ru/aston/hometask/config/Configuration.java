@@ -5,17 +5,12 @@ import com.github.javafaker.Internet;
 import com.github.javafaker.Name;
 import com.github.javafaker.Number;
 import lombok.extern.slf4j.Slf4j;
-import ru.aston.hometask.controller.CreateUserController;
-import ru.aston.hometask.controller.DeleteUserController;
 import ru.aston.hometask.controller.DispatcherController;
-import ru.aston.hometask.controller.HelpController;
-import ru.aston.hometask.controller.PrintUsersController;
-import ru.aston.hometask.controller.ReadUserController;
-import ru.aston.hometask.controller.UpdateUserController;
+import ru.aston.hometask.controller.UserController;
 import ru.aston.hometask.entity.User;
 import ru.aston.hometask.repository.UserRepositoryImpl;
 import ru.aston.hometask.service.UserServiceImpl;
-import ru.aston.hometask.utils.Command;
+import ru.aston.hometask.utils.Key;
 import ru.aston.hometask.utils.Validator;
 
 import java.util.Objects;
@@ -35,12 +30,7 @@ public class Configuration implements AutoCloseable {
         UserServiceImpl userService = new UserServiceImpl(userRepository);
 
         DispatcherController dispatcher = new DispatcherController();
-        dispatcher.registerController(Command.CREATE, new CreateUserController(userService));
-        dispatcher.registerController(Command.READ, new ReadUserController(userService));
-        dispatcher.registerController(Command.UPDATE, new UpdateUserController(userService));
-        dispatcher.registerController(Command.DELETE, new DeleteUserController(userService));
-        dispatcher.registerController(Command.PRINT, new PrintUsersController(userService));
-        dispatcher.registerController(Command.HELP, new HelpController());
+        dispatcher.registerController(Key.USER, new UserController(userService));
 
         faker = new Faker();
         addRandomStartData(100);

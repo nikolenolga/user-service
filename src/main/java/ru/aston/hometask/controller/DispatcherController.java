@@ -15,22 +15,22 @@ import java.util.Objects;
 public class DispatcherController {
     private final Map<String, Controller> controllers = new HashMap<>();
 
-    public void registerController(String command, Controller controller) {
-        controllers.put(command, controller);
+    public void registerController(String route, Controller controller) {
+        controllers.put(route, controller);
     }
 
     public void send(AppRequest request) throws AppException {
-        String command = request.getCommandName();
+        String route = request.getRoute();
 
-        if (Objects.isNull(command)) {
-            throw new AppException(Message.NO_COMMAND_FOUND_SEE_HELP);
+        if (Objects.isNull(route)) {
+            throw new AppException(Message.NO_ROUTE_FOUND_SEE_HELP);
         }
-        if (!controllers.containsKey(command)) {
-            throw new AppException(Message.X_IS_NOT_AN_APP_COMMAND_SEE_HELP.formatted(command));
+        if (!controllers.containsKey(route)) {
+            throw new AppException(Message.CAN_NOT_PROCESS_THE_ROUTE_X_SEE_HELP.formatted(route));
         }
 
-        log.debug("Executing command {}", command);
-        controllers.get(command).execute(request);
+        log.debug("Processing the route {}", route);
+        controllers.get(route).execute(request);
     }
 
 }

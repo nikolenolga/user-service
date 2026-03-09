@@ -16,7 +16,10 @@ public class AppRequest {
     private static final String REQUEST_PARTS_SPLITERATOR = " ";
     private static final String PARAMETERS_SPLITERATOR = "=";
     private static final String EXIT_COMMAND = Command.EXIT;
+    private static final String HELP_COMMAND = Command.HELP;
     private final Map<String, String> parameters = new HashMap<>();
+    @Getter
+    private String route;
     @Getter
     private String commandName;
 
@@ -25,7 +28,6 @@ public class AppRequest {
 
     public static AppRequest createRequest(String requestLine) {
         log.info("Request: {}", requestLine);
-        String[] s = requestLine.trim().split(" ");
         if (StringUtils.isBlank(requestLine)) {
             throw new AppException(Message.EMPTY_REQUEST);
         }
@@ -33,11 +35,19 @@ public class AppRequest {
         int firstParameterIndex = 0;
         String[] requestParts = requestLine.trim().split(REQUEST_PARTS_SPLITERATOR);
         AppRequest request = new AppRequest();
-        String requestStart = requestParts[0].trim();
+        String commandNamePart = requestParts[0].trim();
 
-        if (!requestStart.contains(PARAMETERS_SPLITERATOR) && !StringUtils.isBlank(requestStart)) {
+        if (!commandNamePart.contains(PARAMETERS_SPLITERATOR) && !StringUtils.isBlank(commandNamePart)) {
             firstParameterIndex = 1;
-            request.commandName = requestStart.toLowerCase();
+            request.commandName = commandNamePart.toLowerCase();
+        }
+
+        if (requestParts.length > 1) {
+            String routePart = requestParts[1].trim();
+            if (!routePart.contains(PARAMETERS_SPLITERATOR) && !StringUtils.isBlank(routePart)) {
+                firstParameterIndex = 2;
+                request.route = routePart.toLowerCase();
+            }
         }
 
         if (requestParts.length > firstParameterIndex) {
@@ -114,5 +124,9 @@ public class AppRequest {
 
     public boolean isExitRequest() {
         return EXIT_COMMAND.equals(commandName);
+    }
+
+    public boolean isHelpRequest() {
+        return HELP_COMMAND.equals(commandName);
     }
 }

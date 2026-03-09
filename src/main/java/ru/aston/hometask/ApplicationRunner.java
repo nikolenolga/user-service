@@ -6,6 +6,7 @@ import ru.aston.hometask.context.AppRequest;
 import ru.aston.hometask.controller.DispatcherController;
 import ru.aston.hometask.exception.AppException;
 import ru.aston.hometask.exception.DatabaseException;
+import ru.aston.hometask.utils.Command;
 import ru.aston.hometask.utils.Message;
 
 import java.io.BufferedReader;
@@ -27,6 +28,10 @@ public class ApplicationRunner {
                     AppRequest request = AppRequest.createRequest(reader.readLine());
                     if (request.isExitRequest()) {
                         break;
+                    }
+                    if (request.isHelpRequest()) {
+                        System.out.println(Command.HELP_INFO);
+                        continue;
                     }
 
                     dispatcherController.send(request);
