@@ -17,12 +17,10 @@ public class Dto {
     }
 
     public UserTo from(User user) {
-        return UserTo.builder()
-                .id(user.getId())
-                .name(user.getName())
-                .email(user.getEmail())
-                .age(user.getAge())
-                .createdAt(user.getCreatedAt())
-                .build();
+        return new UserTo(user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getAge(),
+                user.getCreatedAt());
     }
 }

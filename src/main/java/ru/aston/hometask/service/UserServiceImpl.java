@@ -16,7 +16,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserTo create(String name, String email, Integer age) {
-        UserTo userTo = UserTo.builder().name(name).email(email).age(age).build();
+        UserTo userTo = new UserTo(null, name, email, age, null);
 
         return userRepository.create(Dto.MAPPER.from(userTo))
                 .map(Dto.MAPPER::from)
@@ -41,13 +41,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserTo update(Long id, String name, String email, Integer age) {
         UserTo read = read(id);
-        UserTo updating = UserTo.builder()
-                .id(id)
-                .name(Objects.isNull(name) ? read.getName() : name)
-                .email(Objects.isNull(email) ? read.getEmail() : email)
-                .age(Objects.isNull(age) ? read.getAge() : age)
-                .createdAt(read.getCreatedAt())
-                .build();
+        UserTo updating = new UserTo(
+                id,
+                Objects.isNull(name) ? read.getName() : name,
+                Objects.isNull(email) ? read.getEmail() : email,
+                Objects.isNull(age) ? read.getAge() : age,
+                read.getCreatedAt());
 
         return update(updating);
     }
