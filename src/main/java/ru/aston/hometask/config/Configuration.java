@@ -4,6 +4,7 @@ import com.github.javafaker.Faker;
 import com.github.javafaker.Internet;
 import com.github.javafaker.Name;
 import com.github.javafaker.Number;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import ru.aston.hometask.controller.DispatcherController;
 import ru.aston.hometask.controller.UserController;
@@ -17,19 +18,26 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 @Slf4j
+@Getter
 public class Configuration implements AutoCloseable {
     private SessionCreator sessionCreator;
     private UserRepositoryImpl userRepository;
+    private UserServiceImpl userService;
+    private DispatcherController dispatcher;
     private Faker faker;
 
     public DispatcherController configureApplication() {
         log.info("Configuring application...");
         ApplicationProperties applicationProperties = new ApplicationProperties();
+        return configureApplication(applicationProperties);
+    }
+
+    public DispatcherController configureApplication(ApplicationProperties applicationProperties) {
         sessionCreator = new SessionCreator(applicationProperties);
         userRepository = new UserRepositoryImpl(sessionCreator);
-        UserServiceImpl userService = new UserServiceImpl(userRepository);
+        userService = new UserServiceImpl(userRepository);
 
-        DispatcherController dispatcher = new DispatcherController();
+        dispatcher = new DispatcherController();
         dispatcher.registerController(Key.USER, new UserController(userService));
 
         faker = new Faker();
