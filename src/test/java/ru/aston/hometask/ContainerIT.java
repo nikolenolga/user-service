@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @Slf4j
 public class ContainerIT {
-    public static final String DOCKER_IMAGE_NAME = "postgres:16.3";
+    public static final String DOCKER_IMAGE_NAME = "postgres:latest";
     private static final JdbcDatabaseContainer<?> CONTAINER;
     public static Configuration configuration;
     public static SessionCreator sessionCreator;
