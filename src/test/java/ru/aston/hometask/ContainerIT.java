@@ -31,7 +31,6 @@ public class ContainerIT {
         configuration = new Configuration();
         configuration.configureApplication(properties);
         sessionCreator = configuration.getSessionCreator();
-        log.info("Test container ContainerIt initialized");
     }
 
     public ContainerIT() {
